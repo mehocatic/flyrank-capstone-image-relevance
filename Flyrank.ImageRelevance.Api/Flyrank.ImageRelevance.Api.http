@@ -1,45 +1,65 @@
 @baseUrl = http://localhost:5273
+@seededFoxPostId = 10000000-0000-0000-0000-000000000001
 
-### Create a post and generate its embedding
+### 1. Create the red fox post used by the end-to-end test
+# @name createFoxPost
 POST {{baseUrl}}/api/posts
 Content-Type: application/json
 
 {
-  "title": "Lisica u šumi",
-  "content": "Fotografija crvene lisice koja prolazi kroz jesenju šumu."
+  "title": "Behavior and Habitat of Red Foxes",
+  "content": "Red foxes are adaptable mammals. They live in forests, grasslands, and urban areas, and are known for their reddish fur and bushy tails."
 }
 
-### Analyze an image and rank it against posts
+###
+@foxPostId = {{createFoxPost.response.body.$.id}}
+
+### 2. Analyze a sample image and rank it against posts
+# In Development demo mode, the analyzer deterministically returns a wolf.
+# The Base64 value is a tiny valid PNG placeholder. Demo mode does not use its pixels.
+# @name processWolfImage
 POST {{baseUrl}}/api/images/process
 Content-Type: application/json
 
 {
-  "url": "https://example.com/red-fox.png",
+  "url": "https://images.example.test/sample-wolf.png",
   "mimeType": "image/png",
-  "imageBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADUlEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
+  "imageBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADUlEQVQImWNgYGD4DwABBAEAHnOcQAAAAABJRU5ErkJggg=="
 }
 
-### Get images ranked for a post. Replace the ID with the post ID from the create response.
-GET {{baseUrl}}/api/posts/00000000-0000-0000-0000-000000000000/images
+###
+@wolfImageId = {{processWolfImage.response.body.$.imageId}}
+
+### 3. Confirm the wolf image was rejected for the red fox post
+# Expected rejectionReason: "Animal category mismatch: expected fox, detected wolf"
+GET {{baseUrl}}/api/posts/{{foxPostId}}/images
 Accept: application/json
 
-### Approve a suggestion. Replace IDs with values from the process response.
+### 4. A manual approval of the guarded mismatch should return 409 Conflict
 POST {{baseUrl}}/api/reviews
 Content-Type: application/json
 
 {
-  "postId": "00000000-0000-0000-0000-000000000000",
-  "imageId": "00000000-0000-0000-0000-000000000000",
+  "postId": "{{foxPostId}}",
+  "imageId": "{{wolfImageId}}",
   "isApproved": true
 }
 
-### Reject a suggestion
+### 5. Manually reject the recommendation and save a reviewer explanation
 POST {{baseUrl}}/api/reviews
 Content-Type: application/json
 
 {
-  "postId": "00000000-0000-0000-0000-000000000000",
-  "imageId": "00000000-0000-0000-0000-000000000000",
+  "postId": "{{foxPostId}}",
+  "imageId": "{{wolfImageId}}",
   "isApproved": false,
-  "rejectionReason": "Slika nije dovoljno relevantna za sadržaj posta."
+  "rejectionReason": "Animal category mismatch: expected fox, detected wolf"
 }
+
+### 6. Confirm demo seed data is available immediately after startup
+GET {{baseUrl}}/api/posts/{{seededFoxPostId}}/images
+Accept: application/json
+
+### 7. Example missing post response
+GET {{baseUrl}}/api/posts/00000000-0000-0000-0000-000000000000/images
+Accept: application/json

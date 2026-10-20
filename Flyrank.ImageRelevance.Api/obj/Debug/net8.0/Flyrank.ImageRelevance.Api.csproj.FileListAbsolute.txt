@@ -44,3 +44,4 @@ C:\Users\Administrator\Desktop\flyrank-capstone-image-relevance\Flyrank.ImageRel
 C:\Users\Administrator\Desktop\flyrank-capstone-image-relevance\Flyrank.ImageRelevance.Api\obj\Debug\net8.0\Flyrank.ImageRelevance.Api.pdb
 C:\Users\Administrator\Desktop\flyrank-capstone-image-relevance\Flyrank.ImageRelevance.Api\obj\Debug\net8.0\Flyrank.ImageRelevance.Api.genruntimeconfig.cache
 C:\Users\Administrator\Desktop\flyrank-capstone-image-relevance\Flyrank.ImageRelevance.Api\obj\Debug\net8.0\ref\Flyrank.ImageRelevance.Api.dll
+C:\Users\Administrator\Desktop\flyrank-capstone-image-relevance\Flyrank.ImageRelevance.Api\obj\Debug\net8.0\Flyrank.ImageRelevance.Api.sourcelink.json

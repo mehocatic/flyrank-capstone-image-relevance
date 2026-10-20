@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Flyrank.ImageRelevance.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30fd193e4a25124bd9f9e6feea178ebcc6ba3040")]
 [assembly: System.Reflection.AssemblyProductAttribute("Flyrank.ImageRelevance.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Flyrank.ImageRelevance.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

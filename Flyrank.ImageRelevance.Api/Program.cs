@@ -19,17 +19,27 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.Configure<GeminiOptions>(
     builder.Configuration.GetSection(GeminiOptions.SectionName));
-builder.Services.AddHttpClient<GeminiApiClient>((serviceProvider, client) =>
+var demoMode = builder.Environment.IsDevelopment() &&
+               builder.Configuration.GetValue<bool>("DemoMode");
+if (demoMode)
 {
-    var options = serviceProvider.GetRequiredService<
-        Microsoft.Extensions.Options.IOptions<GeminiOptions>>().Value;
-    client.BaseAddress = new Uri(options.BaseUrl);
-    client.Timeout = TimeSpan.FromSeconds(90);
-});
-builder.Services.AddScoped<IImageAnalysisService>(serviceProvider =>
-    serviceProvider.GetRequiredService<GeminiApiClient>());
-builder.Services.AddScoped<IEmbeddingService>(serviceProvider =>
-    serviceProvider.GetRequiredService<GeminiApiClient>());
+    builder.Services.AddSingleton<IImageAnalysisService, DemoImageAnalysisService>();
+    builder.Services.AddSingleton<IEmbeddingService, DemoEmbeddingService>();
+}
+else
+{
+    builder.Services.AddHttpClient<GeminiApiClient>((serviceProvider, client) =>
+    {
+        var options = serviceProvider.GetRequiredService<
+            Microsoft.Extensions.Options.IOptions<GeminiOptions>>().Value;
+        client.BaseAddress = new Uri(options.BaseUrl);
+        client.Timeout = TimeSpan.FromSeconds(90);
+    });
+    builder.Services.AddScoped<IImageAnalysisService>(serviceProvider =>
+        serviceProvider.GetRequiredService<GeminiApiClient>());
+    builder.Services.AddScoped<IEmbeddingService>(serviceProvider =>
+        serviceProvider.GetRequiredService<GeminiApiClient>());
+}
 builder.Services.AddSingleton<IImageRelevanceRepository, InMemoryImageRelevanceRepository>();
 builder.Services.AddSingleton<IMismatchGuard, MismatchGuard>();
 builder.Services.AddScoped<IImageRelevanceService, ImageRelevanceService>();
@@ -47,5 +57,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.MapControllers();
+
+if (demoMode)
+{
+    DemoDataSeeder.Seed(
+        app.Services.GetRequiredService<IImageRelevanceRepository>(),
+        app.Services.GetRequiredService<IMismatchGuard>());
+    app.Logger.LogInformation(
+        "Demo mode is enabled. Gemini calls are replaced with deterministic sample analysis.");
+}
 
 app.Run();

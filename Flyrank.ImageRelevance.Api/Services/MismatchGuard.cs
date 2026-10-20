@@ -7,7 +7,7 @@ public sealed partial class MismatchGuard : IMismatchGuard
 {
     private static readonly string[][] AnimalAliases =
     [
-        ["fox", "vixen"],
+        ["fox", "foxes", "vixen"],
         ["wolf", "wolves"],
         ["dog", "dogs", "canine"],
         ["cat", "cats", "feline"],
@@ -35,9 +35,9 @@ public sealed partial class MismatchGuard : IMismatchGuard
         if (matchingAnimal is not null)
             return null;
 
-        var detected = string.Join(", ", imageAnimals);
-        var referenced = string.Join(", ", postAnimals);
-        return $"Mismatch Guard: slika prikazuje {detected}, ali post govori o {referenced}.";
+        var expected = postAnimals.First();
+        var detected = imageAnimals.First();
+        return $"Animal category mismatch: expected {expected}, detected {detected}";
     }
 
     private static HashSet<string> FindAnimals(string text)

@@ -15,7 +15,9 @@ public sealed class ReviewService(IImageRelevanceRepository repository) : IRevie
             return null;
 
         if (request.IsApproved &&
-            suggestion.RejectionReason?.StartsWith("Mismatch Guard:", StringComparison.Ordinal) == true)
+            suggestion.RejectionReason?.StartsWith(
+                "Animal category mismatch:",
+                StringComparison.Ordinal) == true)
         {
             throw new MismatchApprovalException(
                 "Preporuka koju je Mismatch Guard odbio ne može biti odobrena.");
