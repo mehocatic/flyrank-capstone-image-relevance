@@ -1,0 +1,45 @@
+@baseUrl = http://localhost:5273
+
+### Create a post and generate its embedding
+POST {{baseUrl}}/api/posts
+Content-Type: application/json
+
+{
+  "title": "Lisica u šumi",
+  "content": "Fotografija crvene lisice koja prolazi kroz jesenju šumu."
+}
+
+### Analyze an image and rank it against posts
+POST {{baseUrl}}/api/images/process
+Content-Type: application/json
+
+{
+  "url": "https://example.com/red-fox.png",
+  "mimeType": "image/png",
+  "imageBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADUlEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
+}
+
+### Get images ranked for a post. Replace the ID with the post ID from the create response.
+GET {{baseUrl}}/api/posts/00000000-0000-0000-0000-000000000000/images
+Accept: application/json
+
+### Approve a suggestion. Replace IDs with values from the process response.
+POST {{baseUrl}}/api/reviews
+Content-Type: application/json
+
+{
+  "postId": "00000000-0000-0000-0000-000000000000",
+  "imageId": "00000000-0000-0000-0000-000000000000",
+  "isApproved": true
+}
+
+### Reject a suggestion
+POST {{baseUrl}}/api/reviews
+Content-Type: application/json
+
+{
+  "postId": "00000000-0000-0000-0000-000000000000",
+  "imageId": "00000000-0000-0000-0000-000000000000",
+  "isApproved": false,
+  "rejectionReason": "Slika nije dovoljno relevantna za sadržaj posta."
+}

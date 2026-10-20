@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Flyrank.ImageRelevance.Api</name>
+    </assembly>
+    <members>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.CreatePostRequest">
+            <summary>Content to index as a post for image matching.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.CreatePostRequest.Title">
+            <summary>Post title.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.CreatePostRequest.Content">
+            <summary>Post body text.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.PostResponse">
+            <summary>Post data returned by the API.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Contracts.PostResponse.#ctor(System.Guid,System.String,System.String,System.DateTimeOffset)">
+            <summary>Post data returned by the API.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.RankedImagesResponse">
+            <summary>Images ranked for a post, including any mismatch rejection explanations.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Contracts.RankedImagesResponse.#ctor(System.Guid,System.String,System.Collections.Generic.IReadOnlyList{Flyrank.ImageRelevance.Api.Contracts.RankedImageResponse})">
+            <summary>Images ranked for a post, including any mismatch rejection explanations.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.RankedImageResponse">
+            <summary>Image metadata and its matching score for a post.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Contracts.RankedImageResponse.#ctor(System.Guid,System.String,System.String,System.String,System.String,System.Double,System.Double,System.Boolean,System.String)">
+            <summary>Image metadata and its matching score for a post.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.ProcessImageRequest">
+            <summary>Image URL and image bytes submitted for visual analysis.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.ProcessImageRequest.Url">
+            <summary>Public HTTPS URL associated with the image.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.ProcessImageRequest.ImageBase64">
+            <summary>Base64-encoded image bytes, without a data URL prefix.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.ProcessImageRequest.MimeType">
+            <summary>Image media type. Supported values are image/jpeg, image/png, and image/webp.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.ProcessImageResponse">
+            <summary>Structured image analysis and the resulting post matches.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Contracts.ProcessImageResponse.#ctor(System.Guid,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.String,System.Double,System.Collections.Generic.IReadOnlyList{Flyrank.ImageRelevance.Api.Contracts.ImageSuggestionResponse})">
+            <summary>Structured image analysis and the resulting post matches.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.ImageSuggestionResponse">
+            <summary>A post candidate ranked for an analyzed image.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Contracts.ImageSuggestionResponse.#ctor(System.Guid,System.Guid,System.Double,System.Boolean,System.String)">
+            <summary>A post candidate ranked for an analyzed image.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.ReviewRequest">
+            <summary>Reviewer decision for a specific image and post pair.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.ReviewRequest.PostId">
+            <summary>Identifier of the post in the candidate pair.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.ReviewRequest.ImageId">
+            <summary>Identifier of the image in the candidate pair.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.ReviewRequest.IsApproved">
+            <summary>True to approve the pair, false to reject it.</summary>
+        </member>
+        <member name="P:Flyrank.ImageRelevance.Api.Contracts.ReviewRequest.RejectionReason">
+            <summary>Optional reviewer explanation when rejecting the pair.</summary>
+        </member>
+        <member name="T:Flyrank.ImageRelevance.Api.Contracts.ReviewResponse">
+            <summary>Stored reviewer decision for an image and post pair.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Contracts.ReviewResponse.#ctor(System.Guid,System.Guid,System.Double,System.Boolean,System.String)">
+            <summary>Stored reviewer decision for an image and post pair.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Controllers.ImagesController.Process(Flyrank.ImageRelevance.Api.Contracts.ProcessImageRequest,System.Threading.CancellationToken)">
+            <summary>Analyzes an image with Gemini and ranks it against existing posts.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Controllers.PostsController.Create(Flyrank.ImageRelevance.Api.Contracts.CreatePostRequest,System.Threading.CancellationToken)">
+            <summary>Creates and indexes a post for future semantic image matching.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Controllers.PostsController.GetImages(System.Guid)">
+            <summary>Returns image suggestions ranked for the specified post.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Controllers.ReviewsController.Review(Flyrank.ImageRelevance.Api.Contracts.ReviewRequest)">
+            <summary>Approves or rejects an image and post suggestion.</summary>
+        </member>
+        <member name="M:Flyrank.ImageRelevance.Api.Services.MismatchGuard.WordRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>[^a-z0-9]+</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [^0-9a-z] atomically at least once.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WordRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.WordRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_FF0300000000FEFFFF07">
+            <summary>Supports searching for characters in or not in "0123456789abcdefghijklmnopqrstuvwxyz".</summary>
+        </member>
+    </members>
+</doc>
