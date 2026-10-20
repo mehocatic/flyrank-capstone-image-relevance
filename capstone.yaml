@@ -1,0 +1,46 @@
+name: Flyrank.ImageRelevance.Api
+description: .NET 8 API for image analysis and semantic image-to-post matching.
+runtime:
+  framework: net8.0
+  development_demo_mode: true
+  storage: in-memory
+  batch_image_processing: not-implemented
+base_url: http://localhost:5273
+openapi_url: /swagger/v1/swagger.json
+routes:
+  - method: POST
+    path: /api/posts
+    purpose: Create a post and generate its embedding.
+    success_status: 201
+  - method: POST
+    path: /api/images/process
+    purpose: Analyze one image and rank it against stored posts.
+    success_status: 200
+  - method: GET
+    path: /api/posts/{id}/images
+    purpose: Return ranked image suggestions for a post.
+    success_status: 200
+    not_found_status: 404
+  - method: POST
+    path: /api/reviews
+    purpose: Approve or reject an image and post suggestion.
+    success_status: 200
+    not_found_status: 404
+    guarded_approval_status: 409
+section_6:
+  schema_validation:
+    status: implemented
+    evidence:
+      - Flyrank.ImageRelevance.Api/Services/GeminiApiClient.cs
+      - Flyrank.ImageRelevance.Api/Services/ImageRelevanceService.cs
+  batch_tasks:
+    status: not-implemented
+    note: Image processing currently accepts one image per request.
+  mismatch_guard:
+    status: implemented
+    expected_demo_reason: "Animal category mismatch: expected fox, detected wolf"
+evidence_images:
+  - docs/images/swagger.png
+  - docs/images/post.png
+  - docs/images/post-images.png
+http_examples: Flyrank.ImageRelevance.Api/Flyrank.ImageRelevance.Api.http
